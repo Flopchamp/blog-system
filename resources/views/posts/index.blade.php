@@ -46,12 +46,36 @@
                                     </span>
                                 @endif
 
-                                <!-- Title -->
-                                <h3 style="font-size: 20px; font-weight: bold; margin: 15px 0 10px 0; color: #1f2937;">
-                                    <a href="{{ route('posts.show', $post) }}" style="text-decoration: none; color: inherit;">
-                                        {{ $post->title }}
-                                    </a>
-                                </h3>
+                                <!-- Read More Button -->
+                                    <div style="margin-top: 15px;">
+                                        <a href="{{ route('posts.show', $post) }}" 
+                                        style="display: block; background-color: #667eea; color: white; padding: 10px; text-align: center; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 14px;">
+                                            📖 Read Full Post
+                                        </a>
+                                    </div>
+
+                                    <!-- Action Buttons (only for post owner) -->
+                                    @auth
+                                        @if($post->user_id === auth()->id())
+                                            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                                                <a href="{{ route('posts.edit', $post) }}" 
+                                                style="flex: 1; background-color: #3b82f6; color: white; padding: 8px; text-align: center; border-radius: 6px; text-decoration: none; font-size: 14px;">
+                                                    Edit
+                                                </a>
+                                                <form action="{{ route('posts.destroy', $post) }}" 
+                                                    method="POST" 
+                                                    style="flex: 1;"
+                                                    onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" 
+                                                            style="width: 100%; background-color: #ef4444; color: white; padding: 8px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px;">
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        @endif
+                                    @endauth
 
                                 <!-- Excerpt -->
                                 @if($post->excerpt)
